@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.microgle.fo"
+    android:versionCode="4"
+    android:versionName="2.1" >
+
+    <uses-sdk android:minSdkVersion="4" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+	<uses-permission android:name="android.permission.READ_LOGS"></uses-permission>
+
+    <application
+        android:icon="@drawable/foj"
+        android:label="@string/app_name" >
+        <activity
+            android:name="com.microgle.fo.MicrogleFoActivity"
+            android:label="@string/app_name" 
+            android:configChanges="orientation|keyboard" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.umeng.fb.ui.SendFeedback"
+    		android:windowSoftInputMode="adjustResize" />
+		<activity android:name="com.umeng.fb.ui.FeedbackConversations" />
+		<activity android:name="com.umeng.fb.ui.FeedbackConversation"
+   			android:configChanges="keyboard" >
+		</activity>
+        
+        <meta-data android:value="50cd2830527015636e00010a" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="default" android:name="UMENG_CHANNEL"/>
+        <activity android:name="com.microgle.fo.FileDialog"></activity>
+        <service
+            android:name="com.umeng.common.net.DownloadingService"
+            android:exported="true"
+            android:process=":DownloadingService" >
+        </service>
+    </application>
+
+</manifest>

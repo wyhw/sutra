@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">佛经诵读</string>
+    <string name="app_name">佛经诵读</string>
+    <string name="location">位置</string>
+    <string name="cant_read_folder">无法读取目录</string>
+    <string name="nnew">新增</string>
+    <string name="select">选择</string>
+    <string name="file_name">文件名:</string>
+    <string name="cancel">取消</string>
+    <string name="create">保存</string>
+    <string name="no_data">没有数据</string>
+    <color name="gray">#ffff0000</color>
+    <string name="err">错误</string>
+
+</resources>
