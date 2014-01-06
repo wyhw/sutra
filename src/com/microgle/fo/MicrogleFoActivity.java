@@ -86,8 +86,7 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
 		"xj",
 		"jgj",
 		"dbz",
-		"dfdsly",
-		"wmjss"
+		"dfdsly"
 		//"ysz"
 	};
 	private static final String[] MP3_FROM_URLS = {
@@ -115,17 +114,16 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
         "金刚经",
         "大悲咒（经）",
         "楞严咒（经）",
-        "维摩诘所说（经）"
         //"药师咒"
 	};
 	
 	private static final int INDEX_DEF_TINGFOSHUOFA = 1;
 	private static final int INDEX_FO_START = 2;
-	private static final int INDEX_DEF_GO_PAGE = 13;
-	private static final int INDEX_DEF_SET_FONT = 14;
-	private static final int INDEX_DEF_CLEAN_MP3 = 15;
-	private static final int INDEX_DEF_CONTACT_US = 16;
-	private static final int INDEX_DEF_UPDATE = 17;
+	private static final int INDEX_DEF_GO_PAGE = 12;
+	private static final int INDEX_DEF_SET_FONT = 13;
+	private static final int INDEX_DEF_CLEAN_MP3 = 14;
+	private static final int INDEX_DEF_CONTACT_US = 15;
+	private static final int INDEX_DEF_UPDATE = 16;
 
 	private static final int INDEX_PLAY_PREV = 1;
 	private static final int INDEX_PLAY_NEXT = 2;
@@ -621,7 +619,6 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
         menu.add(itemId, itemId, itemId++, "金刚经");
         menu.add(itemId, itemId, itemId++, "大悲咒");
         menu.add(itemId, itemId, itemId++, "楞严咒");
-        menu.add(itemId, itemId, itemId++, "维摩诘所说");
         //menu.add(0, itemId, itemId++, "药师咒");
         
         menu.add(itemId, itemId, itemId++, "跳转页码");
