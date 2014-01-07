@@ -101,7 +101,8 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
 		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload7/jinggangjing_huiping.mp3",
 		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload14/DBZ16.mp3", 
 		//ERR"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload/dabeizhou_88c.mp3",
-		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload2/LYZ10.mp3"
+		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload2/LYZ10.mp3",
+		"http://mp3up.6000y.com/vd.php/17013726/www.6000y.com.mp3"//wmjss
 		//"ysz"
 	};
 	private static final String[] ASSERTS_RAW_NAMES = {
