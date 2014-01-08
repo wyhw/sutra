@@ -1,6 +1,6 @@
 <?php
 switch($_GET["id"]){
-//302ÁÙÊ±ÖØ¶¨Ïò
+//302ä¸´æ—¶é‡å®šå‘
 case "pxxyps.mp3" :
 	$new_url = 'http://buddha.goodweb.cn/music/musicdownload_all/musicdownload13/%E6%99%AE%E8%B4%A4%E8%8F%A9%E8%90%A8%E8%A1%8C%E6%84%BF%E5%93%81.mp3';
 	break;
