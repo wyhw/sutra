@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.http.client.HttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +55,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -65,6 +67,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 
 /**
  * @author frankiewei
@@ -86,7 +97,8 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
 		"xj",
 		"jgj",
 		"dbz",
-		"dfdsly"
+		"dfdsly",
+		"wmjss"
 		//"ysz"
 	};
 	private static final String[] MP3_FROM_URLS = {
@@ -98,9 +110,10 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
 		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload19/%E5%9C%B0%E8%97%8F%E8%8F%A9%E8%90%A8%E6%9C%AC%E6%84%BF%E7%BB%8F.mp3",
 		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload43/%E5%BF%83%E7%BB%8F_%E5%8A%A0%E9%85%8D%E4%B9%90.mp3",
 		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload7/jinggangjing_huiping.mp3",
-		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload14/DBZ16.mp3", 
+		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload14/DBZ16.mp3",
 		//ERR"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload/dabeizhou_88c.mp3",
-		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload2/LYZ10.mp3"
+		"http://buddha.goodweb.cn/music/musicdownload_all/musicdownload2/LYZ10.mp3",
+		"http://mp3up.6000y.com/vd.php/17013726/www.6000y.com.mp3",
 		//"ysz"
 	};
 	private static final String[] ASSERTS_RAW_NAMES = {
@@ -114,16 +127,17 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
         "金刚经",
         "大悲咒（经）",
         "楞严咒（经）",
+        "维摩诘所说经"
         //"药师咒"
 	};
 	
 	private static final int INDEX_DEF_TINGFOSHUOFA = 1;
 	private static final int INDEX_FO_START = 2;
-	private static final int INDEX_DEF_GO_PAGE = 12;
-	private static final int INDEX_DEF_SET_FONT = 13;
-	private static final int INDEX_DEF_CLEAN_MP3 = 14;
-	private static final int INDEX_DEF_CONTACT_US = 15;
-	private static final int INDEX_DEF_UPDATE = 16;
+	private static final int INDEX_DEF_GO_PAGE = 13;
+	private static final int INDEX_DEF_SET_FONT = 14;
+	private static final int INDEX_DEF_CLEAN_MP3 = 15;
+	private static final int INDEX_DEF_CONTACT_US = 16;
+	private static final int INDEX_DEF_UPDATE = 17;
 
 	private static final int INDEX_PLAY_PREV = 1;
 	private static final int INDEX_PLAY_NEXT = 2;
@@ -466,37 +480,69 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
     
     private void downloadMp3() {
     	final EditText downloadServer = new EditText(this);
-    	downloadServer.setText(MP3_FROM_URLS[currentIndex]);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("可换成你喜欢的音频网址").setView(downloadServer)
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-    	            public void onClick(DialogInterface dialog, int which) {
-    	            	onDownload = false;
-    	            	onChangeDownload = false;
-    	            }
-    	         });
-        builder.setPositiveButton("下载", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            	if (onChangeDownload) {
-            		playEnd();
-            	}
-                String mp3Url = downloadServer.getText().toString();
-                downloadThread t = new downloadThread();
-                t.urlStr = mp3Url;
-                t.path = "download/";
-                t.fileName = "microgle_fo_" + ASSERTS_RAW_TEXTS[currentIndex];
-                t.willChanged = onChangeDownload;
-                onDownload = true;
-                releaseDownloadThread();
-                mDownloadThread = new Thread(t);
-                mDownloadThread.start();
-            }
-        }).setNeutralButton("本地选择", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            	findMp3OnLocation();
-            }
-         });
-        builder.show();
+    	
+ 
+    	String baseUrl = "http://www.microgle.com/app/redirect.php?id=" + ASSERTS_RAW_TEXTS[currentIndex] + ".mp3";
+    	//将URL与参数拼接  
+    	HttpGet getMethod = new HttpGet(baseUrl);  
+    	HttpClient httpClient = new DefaultHttpClient(); 
+    	try {  
+    	    HttpResponse response = httpClient.execute(getMethod); //发起GET请求  
+    	    if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+    	    	   String strResult = EntityUtils.toString(response.getEntity());//获取服务器响应内容  	
+    	    	   if(URLUtil.isValidUrl(strResult) ){
+    	    	   downloadServer.setText(strResult);	
+    	    	   }else{
+    	    	    	downloadServer.setText(MP3_FROM_URLS[currentIndex]);
+    	    	    }
+    	        }else{
+	    	    	downloadServer.setText(MP3_FROM_URLS[currentIndex]);
+	    	    }
+    	   
+    	} catch (ClientProtocolException e) {  
+    		downloadServer.setText(MP3_FROM_URLS[currentIndex]);
+    	    // TODO Auto-generated catch block  
+    	    e.printStackTrace();  
+    	} catch (IOException e) {  
+    		downloadServer.setText(MP3_FROM_URLS[currentIndex]);
+    	    // TODO Auto-generated catch block  
+    	    e.printStackTrace();  
+    	}  
+    	
+     
+    	   AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	        builder.setTitle("可换成你喜欢的音频网址").setView(downloadServer)
+	                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+	    	            public void onClick(DialogInterface dialog, int which) {
+	    	            	onDownload = false;
+	    	            	onChangeDownload = false;
+	    	            }
+	    	         });
+	        builder.setPositiveButton("下载", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	            	if (onChangeDownload) {
+	            		playEnd();
+	            	}
+	           
+	                String mp3Url = downloadServer.getText().toString();
+	                downloadThread t = new downloadThread();
+	        		//取得返回的字符串
+	        		//String strResult = EntityUtils.toString(httpResponse.getEntity());
+	        		t.urlStr = mp3Url;
+	        		t.path = "download/";
+	                t.fileName = "microgle_fo_" + ASSERTS_RAW_TEXTS[currentIndex];
+	                t.willChanged = onChangeDownload;
+	                onDownload = true;
+	                releaseDownloadThread();
+	                mDownloadThread = new Thread(t);
+	                mDownloadThread.start();         		
+	            }
+	        }).setNeutralButton("本地选择", new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {
+	            	findMp3OnLocation();
+	            }
+	         });
+	        builder.show();   
     }
     private void findMp3OnLocation() {
     	Intent intent = new Intent(getBaseContext(), FileDialog.class);
@@ -619,6 +665,7 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
         menu.add(itemId, itemId, itemId++, "金刚经");
         menu.add(itemId, itemId, itemId++, "大悲咒");
         menu.add(itemId, itemId, itemId++, "楞严咒");
+        menu.add(itemId, itemId, itemId++, "维摩诘经");
         //menu.add(0, itemId, itemId++, "药师咒");
         
         menu.add(itemId, itemId, itemId++, "跳转页码");
