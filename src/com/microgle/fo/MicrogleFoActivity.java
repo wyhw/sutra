@@ -55,6 +55,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -74,11 +75,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.widget.TextView;
-
 
 
 /**
@@ -131,7 +127,7 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
         "金刚经",
         "大悲咒（经）",
         "楞严咒（经）",
-        "维摩诘所说（经）"
+        "维摩诘所说经"
         //"药师咒"
 	};
 	
@@ -484,28 +480,36 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
     
     private void downloadMp3() {
     	final EditText downloadServer = new EditText(this);
-    	//System.out.println(MP3_FROM_URLS[currentIndex]);
+    	
  
     	String baseUrl = "http://www.microgle.com/app/redirect.php?id=" + ASSERTS_RAW_TEXTS[currentIndex] + ".mp3";
     	//将URL与参数拼接  
     	HttpGet getMethod = new HttpGet(baseUrl);  
-    	HttpClient httpClient = new DefaultHttpClient();  
+    	HttpClient httpClient = new DefaultHttpClient(); 
     	try {  
     	    HttpResponse response = httpClient.execute(getMethod); //发起GET请求  
-	    
-    	    
-    	    	String strResult = EntityUtils.toString(response.getEntity());//获取服务器响应内容  	
-        	    if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && strResult.equals("")){
-        	    	
-        	    	downloadServer.setText(MP3_FROM_URLS[currentIndex]);
-        	    }else{
-        	    	downloadServer.setText(strResult);
-        	    }
-    	    	
+    	    if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+    	    	   String strResult = EntityUtils.toString(response.getEntity());//获取服务器响应内容  	
+    	    	   if(URLUtil.isValidUrl(strResult) ){
+    	    	   downloadServer.setText(strResult);	
+    	    	   }else{
+    	    	    	downloadServer.setText(MP3_FROM_URLS[currentIndex]);
+    	    	    }
+    	        }else{
+	    	    	downloadServer.setText(MP3_FROM_URLS[currentIndex]);
+	    	    }
     	   
-    	  
-    	    	
-    	   
+    	} catch (ClientProtocolException e) {  
+    		downloadServer.setText(MP3_FROM_URLS[currentIndex]);
+    	    // TODO Auto-generated catch block  
+    	    e.printStackTrace();  
+    	} catch (IOException e) {  
+    		downloadServer.setText(MP3_FROM_URLS[currentIndex]);
+    	    // TODO Auto-generated catch block  
+    	    e.printStackTrace();  
+    	}  
+    	
+     
     	   AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	        builder.setTitle("可换成你喜欢的音频网址").setView(downloadServer)
 	                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -538,20 +542,7 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
 	            	findMp3OnLocation();
 	            }
 	         });
-	        builder.show();
-    	    
-    	} catch (ClientProtocolException e) {  
-    	    // TODO Auto-generated catch block  
-    	    e.printStackTrace();  
-    	} catch (IOException e) {  
-    	    // TODO Auto-generated catch block  
-    	    e.printStackTrace();  
-    	}  
-    	
-    	
-				
-				
-        
+	        builder.show();   
     }
     private void findMp3OnLocation() {
     	Intent intent = new Intent(getBaseContext(), FileDialog.class);
@@ -674,7 +665,7 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
         menu.add(itemId, itemId, itemId++, "金刚经");
         menu.add(itemId, itemId, itemId++, "大悲咒");
         menu.add(itemId, itemId, itemId++, "楞严咒");
-        menu.add(itemId, itemId, itemId++, "维摩诘所说");
+        menu.add(itemId, itemId, itemId++, "维摩诘经");
         //menu.add(0, itemId, itemId++, "药师咒");
         
         menu.add(itemId, itemId, itemId++, "跳转页码");
@@ -1101,11 +1092,6 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
     		Message message = new Message();
 			message.what = MicrogleFoActivity.DOWNLOADEDIDENTIFIER;
 			MicrogleFoActivity.this.playHandler.sendMessage(message);
-		}
-
-		public void setText(String string) {
-			// TODO Auto-generated method stub
-			
 		}
 	}
     
