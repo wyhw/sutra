@@ -315,10 +315,12 @@ public class MicrogleFoActivity<MainActivity> extends Activity implements OnPage
 	    }
 	    setupViews(currentIndex);
 
-        if (checkWifi()) {
-        	checkUpdate();
-        	UMFeedbackService.enableNewReplyNotification(this, NotificationType.AlertDialog);
-        }
+        /*
+         * if (checkWifi()) {
+         *	checkUpdate();  
+         *	UMFeedbackService.enableNewReplyNotification(this, NotificationType.AlertDialog);
+         *	}
+         */
     }
 
     private void setupViews(int index){
